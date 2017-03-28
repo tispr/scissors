@@ -44,6 +44,16 @@ import java.io.OutputStream;
  */
 public class CropView extends ImageView {
 
+    public interface IViewportChanged {
+        void onViewportChanged(int top, int left, int height, int width);
+    }
+
+    private int lastViewPortTop;
+    private int lastViewPortLeft;
+    private int lastViewPortHeight;
+    private int lastViewPortWidth;
+    private IViewportChanged mViewPortChangeListener;
+
     private static final int MAX_TOUCH_POINTS = 2;
     private TouchManager touchManager;
     private CropViewConfig config;
@@ -98,12 +108,25 @@ public class CropView extends ImageView {
         final int viewportWidth = touchManager.getViewportWidth();
         final int viewportHeight = touchManager.getViewportHeight();
         final int left = (getWidth() - viewportWidth) / 2;
-        final int top = (getHeight() - viewportHeight) / 2;
+        int tempTop = (getHeight() - viewportHeight) / 2 + config.getViewportVerticalOffset();
+        final int top = tempTop < 0 ? 0 : tempTop;
+        final int bottom = top + viewportHeight;
 
-        canvas.drawRect(0, top, left, getHeight() - top, viewportPaint);
+        if (mViewPortChangeListener != null) {
+            if (lastViewPortTop != top || lastViewPortLeft != left || lastViewPortWidth != viewportWidth || lastViewPortHeight != viewportHeight) {
+                mViewPortChangeListener.onViewportChanged(top, left, viewportHeight, viewportWidth);
+            }
+        }
+
+        lastViewPortHeight = viewportHeight;
+        lastViewPortWidth = viewportWidth;
+        lastViewPortLeft = left;
+        lastViewPortTop = top;
+
+        canvas.drawRect(0, top, left, bottom, viewportPaint);
         canvas.drawRect(0, 0, getWidth(), top, viewportPaint);
-        canvas.drawRect(getWidth() - left, top, getWidth(), getHeight() - top, viewportPaint);
-        canvas.drawRect(0, getHeight() - top, getWidth(), getHeight(), viewportPaint);
+        canvas.drawRect(getWidth() - left, top, getWidth(), bottom, viewportPaint);
+        canvas.drawRect(0, bottom, getWidth(), getHeight(), viewportPaint);
     }
 
     @Override
@@ -290,6 +313,15 @@ public class CropView extends ImageView {
             extensions = new Extensions(this);
         }
         return extensions;
+    }
+
+    /**
+     * Sets the listener to notify viewport size or position was changed
+     *
+     * @param viewPortChangeListener The new padding of the viewport overlay
+     */
+    public void setViewPortChangeListener(IViewportChanged viewPortChangeListener) {
+        this.mViewPortChangeListener = viewPortChangeListener;
     }
 
     /**

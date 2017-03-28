@@ -26,6 +26,7 @@ class CropViewConfig {
     public static final float DEFAULT_MINIMUM_SCALE = 0f;
     public static final int DEFAULT_IMAGE_QUALITY = 100;
     public static final int DEFAULT_VIEWPORT_OVERLAY_PADDING = 0;
+    public static final int DEFAULT_VIEWPORT_VERTICAL_OFFSET = 0;
     public static final int DEFAULT_VIEWPORT_OVERLAY_COLOR = 0xC8000000; // Black with 200 alpha
 
     private float viewportRatio = DEFAULT_VIEWPORT_RATIO;
@@ -33,6 +34,7 @@ class CropViewConfig {
     private float minScale = DEFAULT_MINIMUM_SCALE;
     private int viewportOverlayPadding = DEFAULT_VIEWPORT_OVERLAY_PADDING;
     private int viewportOverlayColor = DEFAULT_VIEWPORT_OVERLAY_COLOR;
+    private int viewportVerticalOffset = DEFAULT_VIEWPORT_VERTICAL_OFFSET;
 
     public int getViewportOverlayColor() {
         return viewportOverlayColor;
@@ -74,6 +76,14 @@ class CropViewConfig {
         this.minScale = minScale <= 0 ? DEFAULT_MINIMUM_SCALE : minScale;
     }
 
+    public int getViewportVerticalOffset() {
+        return viewportVerticalOffset;
+    }
+
+    public void setViewportVerticalOffset(int viewportVerticalOffset) {
+        this.viewportVerticalOffset = viewportVerticalOffset;
+    }
+
     public static CropViewConfig from(Context context, AttributeSet attrs) {
         final CropViewConfig cropViewConfig = new CropViewConfig();
 
@@ -104,6 +114,10 @@ class CropViewConfig {
         cropViewConfig.setViewportOverlayPadding(
             attributes.getDimensionPixelSize(R.styleable.CropView_cropviewViewportOverlayPadding,
                 CropViewConfig.DEFAULT_VIEWPORT_OVERLAY_PADDING));
+
+        cropViewConfig.setViewportVerticalOffset(
+            attributes.getDimensionPixelSize(R.styleable.CropView_cropviewViewportVerticalOffset,
+                CropViewConfig.DEFAULT_VIEWPORT_VERTICAL_OFFSET));
 
         attributes.recycle();
 
