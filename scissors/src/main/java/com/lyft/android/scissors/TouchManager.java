@@ -139,9 +139,9 @@ class TouchManager {
 
 
         if (bottom - newY >= verticalLimit) {
-            newY = bottom - verticalLimit;
+            newY = bottom - verticalLimit + cropViewConfig.getViewportVerticalOffset();
         } else if (newY - bottom >= verticalLimit) {
-            newY = bottom + verticalLimit;
+            newY = bottom + verticalLimit + cropViewConfig.getViewportVerticalOffset();
         }
 
         float newX = position.getX();
