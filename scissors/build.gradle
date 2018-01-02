@@ -6,7 +6,7 @@ android {
     buildToolsVersion buildToolsVersionValue
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion minSdkVersionValue
         consumerProguardFiles 'proguard-rules.txt'
     }
 
