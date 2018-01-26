@@ -109,6 +109,10 @@ class TouchManager {
         return aspectRatio;
     }
 
+    public float getScale(){
+        return scale;
+    }
+
     public void setAspectRatio(float ratio) {
         aspectRatio = ratio;
         cropViewConfig.setViewportRatio(ratio);

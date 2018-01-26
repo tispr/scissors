@@ -24,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -102,6 +103,32 @@ public class CropView extends ImageView {
         touchManager.applyPositioningAndScale(transform);
 
         canvas.drawBitmap(bitmap, transform, bitmapPaint);
+    }
+
+    @Nullable
+    public RectF getCroppedRegionRect() {
+        if (bitmap == null) {
+            return null;
+        }
+
+        final Matrix matrix = new Matrix();
+        touchManager.applyPositioningAndScale(matrix);
+        final RectF croppedRegion = new RectF();
+        final int viewPortWidth = touchManager.getViewportWidth();
+        final int viewPortHeight = touchManager.getViewportHeight();
+        final float scale = touchManager.getScale();
+        matrix.mapRect(croppedRegion, new RectF(0f, 0f, viewPortWidth / scale, viewPortHeight / scale));
+        final int topOffset = (getHeight() - viewPortHeight) / 2;
+        final int leftOffset = (getWidth() - viewPortWidth) / 2;
+        croppedRegion.set(croppedRegion.left - leftOffset, croppedRegion.top - topOffset, croppedRegion.right - leftOffset, croppedRegion.bottom - topOffset);
+        final float scaledBitmapWidth = bitmap.getWidth() * scale;
+        final float scaledBitmapHeight = bitmap.getHeight() * scale;
+        final float horizontalShift = Math.abs(croppedRegion.left * 2);
+        final float verticalShift = Math.abs(croppedRegion.top * 2);
+        return new RectF((croppedRegion.left + horizontalShift) / scaledBitmapWidth,
+                (croppedRegion.top + verticalShift) / scaledBitmapHeight,
+                (croppedRegion.right + horizontalShift) / scaledBitmapWidth,
+                (croppedRegion.bottom + verticalShift) / scaledBitmapHeight);
     }
 
     private void drawOverlay(Canvas canvas) {
