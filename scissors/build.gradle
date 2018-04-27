@@ -28,7 +28,7 @@ dependencies {
     compileOnly 'com.github.bumptech.glide:glide:3.7.0'
     compileOnly 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compileOnly 'com.android.support:appcompat-v7:' + libVersion
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 repositories {
